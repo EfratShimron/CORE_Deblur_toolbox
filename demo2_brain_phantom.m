@@ -30,14 +30,19 @@ addpath(genpath(pwd))
 
 demo = 'brain_phantom_example'; 
 
-% ==========================================================
-%      CHOOSE ONE SAMPLING PATTERN FROM THE FOLLOWING LIST 
-% ==========================================================
+Sampling_type_vec = [1] % 2 3 4];  % here we run 4 different experiments, 
+% to reproduce Fig. 2 in the paper (each row in the figure is a different experiment)
+
+
 % ---- examples with different subsampling schemes, all with a reduction factor of R=6  ----
- sampling_scheme='periodic';          
-% sampling_scheme='variying-period';   
-% sampling_scheme='variable-density';  
-% sampling_scheme='random';            
+
+for j = 1:length(Sampling_type_vec)
+   
+    if Sampling_type_vec==1; sampling_scheme='periodic';
+    elseif Sampling_type_vec==2;  sampling_scheme='variying-period';
+    elseif Sampling_type_vec==3;  sampling_scheme='variable-density';
+    elseif Sampling_type_vec==4;  sampling_scheme='random';
+    end
 
 
 % ================ preparations: load k-space data & sensitivity maps  ================
@@ -152,6 +157,22 @@ figure; imagesc(abs(MAT)); colormap gray; axis off; caxis([D.cmin D.cmax]); axis
 SPACE = ones(D.N,1)*D.cmax;
 MAT = [D.KspaceSampPattern_DC_in_center  SPACE  C_ZF.final_rec4display  SPACE   C_DEBLUR.final_rec4display SPACE  CS_ZF_err*5    SPACE  CORE_Deblur_err*5];
 figure; imagesc(abs(MAT)); colormap gray; axis off; caxis([D.cmin D.cmax]); axis image;
+hold on;
+text(3*D.N+5,D.N-14,num2str(CS_ZF_final_NRMSE),'Color','w') %,'FontSize',12);
+hold on;
+text(4*D.N+6,D.N-14,C_DEBLUR_final_NRMSE,'Color','w') %,'FontSize',12);
 
 
+% here we concatenate the results of different experiments in order to
+% display them together later (this reproduces Fig. 2 from the paper)
+if j==1
+    MAT_all_examples = [];
+end
 
+MAT_all_examples = [MAT_all_examples; MAT];
+
+
+end % for j
+
+figure; imagesc(abs(MAT_all_examples)); colormap gray; axis off; caxis([D.cmin D.cmax]); axis image;
+title('sampling patter; ZF-CS rec;  CORE-Deblur rec; ZF-CS err x5; CORE-Deblur errx5')

@@ -15,15 +15,9 @@ Examples are provided using simulated phantom data and and in-vivo 7T brain data
 ## Getting Started
 Clone or download the code.
 
-To see the demos run one of these Matlab scripts:
+To see the demos run one of thes following Matlab scripts:
 
-#### In-vivo demos ####
-[**demo1_in_vivo**](demo1_in_vivo.m) - this code includes two examples with in-vivo 32-coils 7T brain data and subsampling with a reduction factor of R=4.
-
-Inside the code, set the following flag:
-demo = 'In_vivo_example_1';
-
-Then run, and you will get figures similar to these:
+1. [**demo1_in_vivo**](demo1_in_vivo.m) - this code includes two examples with in-vivo 32-coils 7T brain data and subsampling with a reduction factor of R=4. It will reproduce the results from Figures 3 and 4 in the paper, e.g.
 
 <img src="README_figures/demo1_iters.jpg" width=1000 align=left>
 
@@ -36,14 +30,11 @@ Then run, and you will get figures similar to these:
 <br />
 
 
-#### Brain phantom demos ####
-[**demo2_brain_phantom**](demo2_brain_phantom.m) - this code includes four examples with simulated brain phantom data and subsampling with a reduction factor of R=10.
+2. [**demo2_brain_phantom**](demo2_brain_phantom.m) - this code includes four examples with simulated brain phantom data and subsampling with a reduction factor of R=10. It will  reproduce the results from this figure (Fig. 2 in the paper):
 
-Run the code and you will reproduce the results from this figure:
+<img src="README_figures/brain_phantom_fig.jpg" width=1000 align=left>.
 
-<img src="README_figures/brain_phantom_fig.jpg" width=1000 align=left>  <br />  .
 
-<br />
 
 ## Acknowledgments
 The in-vivo data is courtesy of Prof. Andrew G. Webb from Leiden University Medical Center (LUMC).
