@@ -62,8 +62,8 @@ classdef DataProcess
             switch demo
                 
                 case 'brain_phantom_example'
-                    D.R = 6; % Under-sampling rate
-                    D.rotangle = 0; % rotation angle for the final reconstruction
+                    
+                    D.rotangle = 0; % rotation angle for the final display
                     D.N = 256;      % Each image is NxN pixels
                     D.N_center = round(D.N/2)+1;
                     D.NC = 8;       % Number of coils
@@ -73,8 +73,8 @@ classdef DataProcess
                     D.FileName = 'Analytical_Brain_data_256';
 
                 case {'In_vivo_example_1','In_vivo_example_2'}
-                    D.R= 4; % Under-sampling rate
-                    D.rotangle = -90; % rotation angle for the final reconstruction
+                    
+                    D.rotangle = -90; % rotation angle for the final display
                     D.N = 240;       % Each image is NxN pixels
                     D.N_center = round(D.N/2)+1;
                     D.NC = 32;       % Number of coils

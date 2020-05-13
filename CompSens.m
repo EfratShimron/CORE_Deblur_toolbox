@@ -38,6 +38,8 @@ classdef CompSens  % Compressed Sensing
 %                     if D.extra_fftshift_flag==1% added in CSprocess18
 %                         sos_ZF_kspace = fftshift(sos_ZF_kspace,2);
 %                     end
+                 
+
 
                 case 'CORE_conv_im'
                     init_guess = D.CORE_conv_im;
@@ -46,8 +48,10 @@ classdef CompSens  % Compressed Sensing
             
 %             % -------- save results --------
              C.init_guess = init_guess;
+             
              C.init_guess4display = prep4display(init_guess,D.extra_fftshift_flag,D.rotangle,D.mask4display);
-            
+ 
+
         end % function C =  CSprocess4
         
         
@@ -71,6 +75,10 @@ classdef CompSens  % Compressed Sensing
             for iter=1:C.num_itrs
                 if iter==1
                     rec = C.init_guess;
+                    
+                     figure; imagesc(abs(rec)); colormap gray; caxis([0 0.8])
+                       title(['Init guess '])
+                    
                 end
                 if mod(iter,10)==0
                     disp(['iter=',num2str(iter)])
@@ -116,7 +124,8 @@ classdef CompSens  % Compressed Sensing
                     
                 %------ calc magnitue error  -------  
                 C.NRMSE_per_iter(iter) = calc_NRMSE(D.GoldStandard4display,rec4display); 
-                    
+                        
+                
                 
             end % for iter
             
