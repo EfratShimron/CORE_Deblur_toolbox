@@ -132,16 +132,17 @@ classdef DataProcess
                     D = sos_from_kspace(D);
                     
                     % --------- K-space Sampling --------
-                    % load sampling pattern
+                    % load sampling mask - all of these are with R=10 and
+                    % are designed for 240x240 matrices
                     switch sampling_scheme
                         case 'periodic'
-                            load('sampling/SamplingPattern_256x256_R6_periodic')
+                            load('sampling/Ordered_Samp_Pattern_240x240_R10')
                         case 'variying-period'
-                            load('sampling/SamplingPattern_256x256_R6_var_period')
+                            load('sampling/Var-Ordered_Samp_Pattern_240x240_R10')
                         case 'variable-density'
-                            load('sampling/SamplingPattern_256x256_R6_var_dens')
+                            load('sampling/Var-Dens_Samp_Pattern_240x240_R10')
                         case 'random'
-                            load('sampling/SamplingPattern_256x256_R6_random')
+                            load('sampling/random uniform_Samp_Pattern_240x240_R10')
                     end
                     
             end % switch demo

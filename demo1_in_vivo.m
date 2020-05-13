@@ -91,11 +91,11 @@ NumIters_CS =100; % this is a good choice for many in-vivo datasets subsampled w
 
 switch demo 
     case 'In_vivo_example_1'
-        NumIters_CORE_Deblur = 11;  % this was calibrated manually
-        NumIters_CS = 90;
+        NumIters_CORE_Deblur = 11;  % number of CS iterations for CORE-Deblur. It was calibrated manually
+        NumIters_CS = 90;           % number of CS iterations for ZF-CS (i.e. CS is initaizlied using k-space Zero-Filling + Inverse Fourier Transform)
         th_for_CS = 0.0012;
     case 'In_vivo_example_2'
-        NumIters_CORE_Deblur = 6;  % this was calibrated manually     
+        NumIters_CORE_Deblur = 6;    
         NumIters_CS = 99;
         th_for_CS = 0.0012;
     case 'brain_phantom'
@@ -140,6 +140,15 @@ MAT = [D.GoldStandard4display  SPACE  3*C_ZF.init_guess4display SPACE  C_DEBLUR.
     ones(D.N,D.N)*D.cmax  SPACE  CS_ZF_err*5    SPACE  CORE_Deblur_err*5];
 figure; imagesc(abs(MAT)); colormap gray; axis off; caxis([D.cmin D.cmax]); axis image;
 hold on;
+text(D.N+5,2*D.N-14,[num2str(NumIters_CS),' iters'],'Color','w') %,'FontSize',12);
+hold on;
+text(2*D.N+6,2*D.N-14,[num2str(NumIters_CORE_Deblur),' iters'],'Color','w') %,'FontSize',12);
+hold on;
+%text(D.N+5,3*D.N-14,num2str(C_ZF.NRMSE_per_iter(end)),'Color','w') %,'FontSize',12);
+text(D.N+5,3*D.N-14,num2str(CS_ZF_final_NRMSE),'Color','w') %,'FontSize',12);
+hold on;
+text(2*D.N+6,3*D.N-14,C_DEBLUR_final_NRMSE,'Color','w') %,'FontSize',12);
+title(['    Gold standard (left)     ;     CS (middle)       ;      CORE-Deblur (right)      '])
 % text(5,12,['Gold Standard'],'Color','w') %,'FontSize',12);
 % hold on;
 % text(D.N+5,12,['CS init guess x3'],'Color','w') %,'FontSize',12);
@@ -154,15 +163,6 @@ hold on;
 % hold on;
 % text(2*D.N+6,2*D.N+12,['CORE-D error x5'],'Color','w') %,'FontSize',12);
 % 
-text(D.N+5,2*D.N-14,[num2str(NumIters_CS),' iters'],'Color','w') %,'FontSize',12);
-hold on;
-text(2*D.N+6,2*D.N-14,[num2str(NumIters_CORE_Deblur),' iters'],'Color','w') %,'FontSize',12);
-hold on;
-%text(D.N+5,3*D.N-14,num2str(C_ZF.NRMSE_per_iter(end)),'Color','w') %,'FontSize',12);
-text(D.N+5,3*D.N-14,num2str(CS_ZF_final_NRMSE),'Color','w') %,'FontSize',12);
-hold on;
-text(2*D.N+6,3*D.N-14,C_DEBLUR_final_NRMSE,'Color','w') %,'FontSize',12);
-title(['    Gold standard (left)     ;     CS (middle)       ;      CORE-Deblur (right)      '])
 
 
 
@@ -191,20 +191,5 @@ ax = gca;
 ax.FontSize = 16;
 xlabel('CS iteration','FontSize',20)
 ylabel('NRMSE','FontSize',20)
-
-
-
-% % ========= Calc error image & NRMSE ========
-% err_mat = abs(abs(D.GoldStandard4display)- abs(D.CORE_conv_im4display));
-% NRMSE = calc_NRMSE(D.GoldStandard4display,D.CORE_conv_im4display);
-% 
-% % ======== display Gold Standard + Rec + Error ======
-% MAT = [D.GoldStandard4display   ones(D.N,5) D.CORE_conv_im4display ; ones(2,5+2*D.N); ones(D.N,D.N)  ones(D.N,5) err_mat*4];
-% 
-% figure; imagesc(abs(MAT)); axis off; axis image; colormap gray; caxis([0 D.cmax]);
-% text(10,10,'Gold Standard','Color','w')
-% text(10+D.N,10,'conv image','Color','w')
-% text(10+D.N,D.N+2+10,'Error magnified x4','Color','w');
-% text(10+D.N,2*D.N-10,sprintf('NRMSE=%.5f',NRMSE),'Color','w');
 
 
