@@ -25,7 +25,7 @@ demo = 'In_vivo_example_1';
 
 Then run, and you will get figures similar to these:
 
-<img src="README_figures/demo1_iters.jpg" width=550 align=left>
+<img src="README_figures/demo1_iters.jpg" width=1000 align=left>
 
 <br />
 <br />
@@ -40,6 +40,9 @@ Then run, and you will get figures similar to these:
 [**demo2_brain_phantom**](demo2_brain_phantom.m) - this code includes four examples with simulated brain phantom data and subsampling with a reduction factor of R=10.
 
 Run the code and you will reproduce the results from this figure:
+
+<img src="README_figures/brain_phantom_fig.jpg width=550 align=left>
+
 
 
 ## Acknowledgments
