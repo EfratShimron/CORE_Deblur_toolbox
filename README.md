@@ -41,9 +41,9 @@ Then run, and you will get figures similar to these:
 
 Run the code and you will reproduce the results from this figure:
 
-<img src="README_figures/brain_phantom_fig.jpg width=550 align=left>
+<img src="README_figures/brain_phantom_fig.jpg" width=1000 align=left>  <br />  .
 
-
+<br />
 
 ## Acknowledgments
 The in-vivo data is courtesy of Prof. Andrew G. Webb from Leiden University Medical Center (LUMC).
