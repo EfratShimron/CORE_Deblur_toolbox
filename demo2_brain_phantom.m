@@ -33,6 +33,9 @@ demo = 'brain_phantom_example';
 Sampling_type_vec = [1 2 3 4];  % here we run 4 different experiments,
 % to reproduce Fig. 2 in the paper (each row in the figure is a different experiment)
 
+% initialization
+NRMSE_CORE_Deblur = zeros(1,length(Sampling_type_vec));
+NRMSE_ZF_CS = zeros(1,length(Sampling_type_vec));
 
 % ---- examples with different subsampling schemes, all with a reduction factor of R=6  ----
 
@@ -49,10 +52,12 @@ for j = 1:length(Sampling_type_vec)
     
     D = DataProcess(demo,sampling_scheme);
     
+    R = round((D.N^2)/nnz(D.KspaceSampPattern_DC_in_center(:)));
+    
     % display sampling mask
     figure;
     imshow(D.KspaceSampPattern_DC_in_center); axis equal; axis tight; axis off;
-    title_str = [sampling_scheme,' Sampling, R=',num2str(D.R)];
+    title_str = [sampling_scheme,' sampling R=',num2str(R)];
     title(title_str,'FontSize',12);  colormap (gray);
     
     % % display gold standard image
@@ -75,14 +80,14 @@ for j = 1:length(Sampling_type_vec)
     err_mat = abs(abs(D.GoldStandard4display)- abs(D.CORE_conv_im4display));
     NRMSE = calc_NRMSE(D.GoldStandard4display,D.CORE_conv_im4display);
     
-    % ======== display Gold Standard + Rec + Error ======
-    MAT = [D.GoldStandard4display   ones(D.N,5) D.CORE_conv_im4display ; ones(2,5+2*D.N); ones(D.N,D.N)  ones(D.N,5) err_mat*4];
-    
-    figure; imagesc(abs(MAT)); axis off; axis image; colormap gray; caxis([0 D.cmax]);
-    text(10,10,'Gold Standard','Color','w')
-    text(10+D.N,10,'conv image','Color','w')
-    text(10+D.N,D.N+2+10,'Error magnified x4','Color','w');
-    text(10+D.N,2*D.N-10,sprintf('NRMSE=%.5f',NRMSE),'Color','w');
+%     % ======== display Gold Standard + CORE Rec (init guess for CS) + Error ======
+%     MAT = [D.GoldStandard4display   ones(D.N,5) D.CORE_conv_im4display ; ones(2,5+2*D.N); ones(D.N,D.N)  ones(D.N,5) err_mat*4];
+%     
+%     figure; imagesc(abs(MAT)); axis off; axis image; colormap gray; caxis([0 D.cmax]);
+%     text(10,10,'Gold Standard','Color','w')
+%     text(10+D.N,10,'CORE conv image','Color','w')
+%     text(10+D.N,D.N+2+10,'Error magnified x4','Color','w');
+%     text(10+D.N,2*D.N-10,sprintf('NRMSE=%.5f',NRMSE),'Color','w');
     
     
     % =======================================================================
@@ -134,8 +139,11 @@ for j = 1:length(Sampling_type_vec)
     CS_ZF_err = C_ZF.final_rec4display - D.GoldStandard4display;
     CORE_Deblur_err = C_DEBLUR.final_rec4display - D.GoldStandard4display;
     
-    C_DEBLUR_final_NRMSE = [sprintf('%.4f',C_DEBLUR.NRMSE_per_iter(end))];
-    CS_ZF_final_NRMSE = [sprintf('%.4f',C_ZF.NRMSE_per_iter(end))];
+    C_DEBLUR_final_NRMSE_str = [sprintf('%.4f',C_DEBLUR.NRMSE_per_iter(end))];
+    CS_ZF_final_NRMSE_str = [sprintf('%.4f',C_ZF.NRMSE_per_iter(end))];
+    
+    NRMSE_CORE_Deblur(j) = C_DEBLUR.NRMSE_per_iter(end);
+    NRMSE_CS_ZF(j)= C_ZF.NRMSE_per_iter(end);
     
     % -------- plots -------------
     
@@ -145,13 +153,15 @@ for j = 1:length(Sampling_type_vec)
     
     SPACE = ones(D.N,1)*D.cmax;
     MAT = [D.KspaceSampPattern_DC_in_center  SPACE  C_ZF.final_rec4display  SPACE   C_DEBLUR.final_rec4display SPACE  CS_ZF_err*5    SPACE  CORE_Deblur_err*5];
-    figure; imagesc(abs(MAT)); colormap gray; axis off; caxis([D.cmin D.cmax]); axis image;
-    hold on;
-    text(3*D.N+5,D.N-14,num2str(CS_ZF_final_NRMSE),'Color','w') %,'FontSize',12);
-    hold on;
-    text(4*D.N+6,D.N-14,C_DEBLUR_final_NRMSE,'Color','w') %,'FontSize',12);
-    title({['sampling pattern; ZF-CS rec ',num2str(C_ZF.num_itrs),' iters;  CORE-Deblur rec ',num2str(C_DEBLUR.num_itrs),' iters'],[' ZF-CS err x5; CORE-Deblur errx5']})
-    colorbar
+
+% -------- display results for the current sampling pattern ---------------    
+%     figure; imagesc(abs(MAT)); colormap gray; axis off; caxis([D.cmin D.cmax]); axis image;
+%     hold on;
+%     text(3*D.N+5,D.N-14,num2str(CS_ZF_final_NRMSE_str),'Color','w') %,'FontSize',12);
+%     hold on;
+%     text(4*D.N+6,D.N-14,C_DEBLUR_final_NRMSE_str,'Color','w') %,'FontSize',12);
+%     title({['sampling pattern; ZF-CS rec ',num2str(C_ZF.num_itrs),' iters;  CORE-Deblur rec ',num2str(C_DEBLUR.num_itrs),' iters'],[' ZF-CS err x5; CORE-Deblur errx5']})
+%     colorbar
     
     % here we concatenate the results of different experiments in order to
     % display them together later (this reproduces Fig. 2 from the paper)
@@ -164,9 +174,19 @@ for j = 1:length(Sampling_type_vec)
     
 end % for j
 
+
+% ================= display results for all sampling patterns ==========
 figure; imagesc(abs(MAT_all_examples));
 colormap gray; axis off;
 caxis([D.cmin D.cmax]);
 axis image;
-
+for j = 1:length(Sampling_type_vec)
+    hold on;
+    str1 = [sprintf('%.4f',NRMSE_CS_ZF(j))];
+    str2 = [sprintf('%.4f',NRMSE_CORE_Deblur(j))];
+    hold on;
+    text(3*D.N+5,j*D.N-14,str1,'Color','w') %,'FontSize',12);
+    hold on;
+    text(4*D.N+6,j*D.N-14,str2,'Color','w') %,'FontSize',12);  
+end
 title({['mask; ZF-CS ',num2str(C_ZF.num_itrs),' iters;  CORE-Deblur ',num2str(C_DEBLUR.num_itrs),' iters; ZF-CS Error x5; CORE-Deblur Error x5']})

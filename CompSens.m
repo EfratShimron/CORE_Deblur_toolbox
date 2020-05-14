@@ -76,8 +76,8 @@ classdef CompSens  % Compressed Sensing
                 if iter==1
                     rec = C.init_guess;
                     
-                     figure; imagesc(abs(rec)); colormap gray; caxis([0 0.8])
-                       title(['Init guess '])
+                   %  figure; imagesc(abs(rec)); colormap gray; caxis([0 0.8])
+                   %  title(['Init guess '])
                     
                 end
                 if mod(iter,10)==0
