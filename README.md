@@ -16,7 +16,7 @@ Clone or download the repository.
 
 To see the demos run one of thes following Matlab scripts:
 
-1. [**demo1_in_vivo**](demo1_in_vivo.m) - this code includes two examples with in-vivo 32-coils 7T brain data and subsampling with a reduction factor of R=4. It will reproduce the results from Figures 3 and 4 in the paper, e.g.
+1. [**demo1_in_vivo**](demo1_in_vivo.m) - this code includes two examples with in-vivo 32-coils 7T brain data. The code reproduces the results from Figures 3 and 4 in the paper, for example:
 
 <img src="README_figures/demo1_iters.jpg" width=1000 align=left>
 
